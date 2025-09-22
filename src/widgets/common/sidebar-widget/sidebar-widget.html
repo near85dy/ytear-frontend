@@ -1,0 +1,6 @@
+<nav class="flex flex-col bg-gray-700 w-48 min-h-full gap-10 p-5 py-32">
+    @for(item of menuItems; track item.name)
+    {
+        <button (click)="onClick(item)" class="flex text-white font-serif bg-transparent p-2 border-transparent text-4xl" [class.text-red-400]="activeItem == item.name">{{item.name}}</button>
+    }
+</nav>

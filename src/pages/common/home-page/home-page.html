@@ -1,0 +1,29 @@
+<div class="flex flex-row bg-common-context h-screen">
+    <div class="w-screen">
+        <div class="flex flex-row justify-center">
+            <div>
+                <button class="flex m-2 p-2 bg-transparent text-white text-2xl">Recommendations</button>
+            </div>
+            <div>
+                <button class="flex m-2 p-2 bg-transparent text-white text-2xl">Following</button>
+            </div>
+        </div>
+        <div class="flex justify-center">
+            <hr class="w-full">
+        </div>
+        <div>
+            <app-tape-widget/>
+        </div> 
+    </div>
+    <div class="flex flex-row bg-red-100 w-full bg-gray-600">
+        <div class="p-4">
+          @if(user) {
+            <div>
+                <p class="text-white">{{ user.username }}</p>
+                <p>Email: {{ user.email }}</p>
+                <p>Name: {{ user.name }} {{ user.surname }}</p>
+            </div>
+          }
+        </div>
+      </div>
+</div> 
