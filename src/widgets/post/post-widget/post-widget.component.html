@@ -1,0 +1,19 @@
+<article class="flex flex-col gap-2 p-4 border-b border-gray-700">
+  <div class="text-gray-400 text-sm">{{ post.createdAt | date:'medium' }}</div>
+  <div class="text-white whitespace-pre-wrap">{{ post.content }}</div>
+  <div class="flex items-center justify-between text-gray-400 text-sm mt-2">
+    <div class="flex gap-6">
+      <span>Views: {{ post.views_count ?? 0 }}</span>
+      <span>Likes: {{ post.likes_count ?? 0 }}</span>
+      <span>Comments: {{ post.comments_count ?? 0 }}</span>
+    </div>
+    <div class="flex gap-2">
+      <button class="px-2 py-1 bg-gray-800 rounded" (click)="onLike()">Like</button>
+      @if (canDelete) {
+        <button class="px-2 py-1 bg-red-600 text-white rounded" (click)="onDelete()">Delete</button>
+      }
+    </div>
+  </div>
+</article>
+
+

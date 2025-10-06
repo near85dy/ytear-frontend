@@ -1,0 +1,23 @@
+<div class="max-w-xl mx-auto">
+  <div class="flex gap-2 p-2 sticky top-0 bg-common-context z-10">
+    <button class="px-3 py-2 rounded bg-gray-800 text-white" (click)="switchType(TapeType.RECOMMENDATION)">Recommendations</button>
+    <button class="px-3 py-2 rounded bg-gray-800 text-white" (click)="switchType(TapeType.FOLLOW)">Following</button>
+    <button class="px-3 py-2 rounded bg-gray-800 text-white" (click)="switchType(TapeType.SELF)">My posts</button>
+  </div>
+
+  <div>
+    @for (p of posts(); track p.id) {
+      <app-post-widget [post]="p" />
+    }
+  </div>
+
+  <div class="p-4 flex justify-center">
+    @if (!endReached()) {
+      <button class="px-4 py-2 bg-gray-700 rounded text-white" (click)="loadMore()">
+        @if (isLoading()) { Loading... } @else { Load more }
+      </button>
+    } @else {
+      <span class="text-gray-500">No more posts</span>
+    }
+  </div>
+</div>

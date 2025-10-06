@@ -11,14 +11,24 @@ export class AuthApi {
 
   constructor(private http: HttpClient) {}
   login(loginForm: LoginFormProp): Observable<any> {
-    return this.http.post(`${this.API_URL}/api/auth/sign-in/email`, loginForm);
+    return this.http.post(`${this.API_URL}/api/auth/sign-in/email`, loginForm, {
+      withCredentials: true,
+    });
   }
 
   signup(signupForm: SignupFormProp): Observable<any> {
-    return this.http.post(`${this.API_URL}/api/auth/sign-up/email`, signupForm);
+    return this.http.post(`${this.API_URL}/api/auth/sign-up/email`, signupForm, {
+      withCredentials: true,
+    });
   }
 
   logout(): Observable<any> {
-    return this.http.post(`${this.API_URL}/api/auth/sign-out`, {});
+    return this.http.post(
+      `${this.API_URL}/api/auth/sign-out`,
+      {},
+      {
+        withCredentials: true,
+      }
+    );
   }
 }

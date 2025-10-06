@@ -1,0 +1,13 @@
+<nav class="flex flex-col bg-gray-700 w-48 min-h-screen p-5">
+    <div class="flex py-32 flex-col gap-10">
+        @for(item of menuItems; track item.name)
+        {
+            <button (click)="onClick(item)" class="flex text-white font-serif bg-transparent p-2 border-transparent text-3xl" [class.text-red-400]="activeItem == item.name">{{item.name}}</button>
+        }
+    </div>
+    <div class="mt-auto">
+        <button (click)="onClick({name: 'back', path: '/'})" class="text-white font-serif bg-transparent p-2 border-transparent text-4xl">
+            Back 
+        </button>
+    </div>
+</nav>

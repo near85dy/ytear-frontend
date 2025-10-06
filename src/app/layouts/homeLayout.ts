@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { SidebarWidget } from '../../widgets/common/sidebar-widget/sidebar-widget';
+import { SidebarWidget } from '../../widgets/common/sidebar-widget/sidebar-widget.component';
 
 @Component({
   selector: 'app-layout',
@@ -13,4 +13,4 @@ import { SidebarWidget } from '../../widgets/common/sidebar-widget/sidebar-widge
     </div>
   `,
 })
-export class LayoutComponent {}
+export class HomeLayoutComponent {}

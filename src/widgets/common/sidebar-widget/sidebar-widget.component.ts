@@ -26,6 +26,6 @@ export class SidebarWidget {
   menuItems: MenuItem[] = [
     { name: 'Home', path: '/' },
     { name: 'Search', path: '/search' },
-    { name: 'Post', path: '/post' },
+    { name: 'Post', path: '/studio/posts' },
   ];
 }
