@@ -3,9 +3,13 @@ import { useState } from "react"
 export default function SignupPage() {
     const [usernameField, setUsernameField] = useState("");
     const [emailField, setEmailField] = useState("");
+
+    const [nameField, setNameField] = useState("");
+    const [surnameField, setSurameField] = useState("");
+
     const [passwordField, setPasswordField] = useState("");
     const [confirmField, setConfirmField] = useState("");
-    const [birthdayField, setBirthdayField] = useState();
+    const [birthdayField, setBirthdayField] = useState("2025-01-01");
     
     const onSubmit = async () => {
         if(!usernameField || !emailField) return
@@ -15,27 +19,36 @@ export default function SignupPage() {
         const prepareData = {
             username: usernameField,
             email: emailField,
+            name: nameField,
+            surname: surnameField,
+            birthday: birthdayField,
             password: passwordField,
             rememberMe: true,
         };
         
-        const response = fetch(`http://77.93.9.99:3000/api/sign-up/email`, {method: "POST", body: JSON.stringify({}), credentials: 'include'});
+        const response = fetch(`http://77.93.9.99:3000/api/sign-up/email`, {method: "POST", body: JSON.stringify(prepareData), credentials: 'include'});
             
     }
 
-    return (<div>
-        <div>
+    return (<div className="flex bg-red-100 justify-center items-center h-screen">
+        <div className="flex flex-col gap-1 bg-gray-200 p-12">
             <label>Username</label>
             <input value={usernameField} onChange={(e) => {setUsernameField(e.target.value)}}></input>
 
             <label>Email</label>
             <input value={emailField} onChange={(e) => {setEmailField(e.target.value)}}></input>
 
+            <label>Name</label>
+            <input value={nameField} onChange={(e) => {setNameField(e.target.value)}}></input>
+
+            <label>Surname</label>
+            <input value={surnameField} onChange={(e) => {setSurameField(e.target.value)}}></input>
+
             <label>Password</label>
-            <input value={passwordField} onChange={(e) => {setPasswordField(e.target.value)}}></input>
+            <input type="password" value={passwordField} onChange={(e) => {setPasswordField(e.target.value)}}></input>
 
             <label>Confirm password</label>
-            <input value={confirmField} onChange={(e) => {setConfirmField(e.target.value)}}></input>
+            <input type="password" value={confirmField} onChange={(e) => {setConfirmField(e.target.value)}}></input>
 
             <button onClick={onSubmit}>Sign up</button>
         </div>
