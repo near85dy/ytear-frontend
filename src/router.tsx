@@ -4,13 +4,15 @@ import SignupPage from "./pages/auth/SignupPage";
 import HomePage from "./pages/HomePage";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import Layout from "./app/layout";
+import ProfilePage from "./pages/ProfilePage";
 
 export const router = createBrowserRouter([
     {
         path: "/", 
         element: <Layout/>,
         children: [
-            {path: "/", Component: HomePage}
+            {path: "/", Component: HomePage},
+            {path: "/profile", Component: ProfilePage}
         ]
     },
     {path: "/forgot-password", Component: ForgotPasswordPage},

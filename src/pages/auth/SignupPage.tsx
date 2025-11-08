@@ -25,9 +25,8 @@ export default function SignupPage() {
             password: passwordField,
             rememberMe: true,
         };
-        
+    
         const response = fetch(`http://77.93.9.99:3000/api/sign-up/email`, {method: "POST", body: JSON.stringify(prepareData), credentials: 'include'});
-            
     }
 
     return (<div className="flex bg-red-100 justify-center items-center h-screen">
@@ -49,6 +48,10 @@ export default function SignupPage() {
 
             <label>Confirm password</label>
             <input type="password" value={confirmField} onChange={(e) => {setConfirmField(e.target.value)}}></input>
+            
+            <div className="flex flex-row">
+                <input type="date" onChange={(e) => setBirthdayField(e.target.value)}/>
+            </div>
 
             <button onClick={onSubmit}>Sign up</button>
         </div>

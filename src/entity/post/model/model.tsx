@@ -6,4 +6,12 @@ export interface Post {
     likes_count: number,
     views_count: number,
     comments: number,
+    user: {
+        id: string,
+        name: string,
+        surname: string,
+        image: string,
+        username: string,
+    }
+    createdAt: string
 }

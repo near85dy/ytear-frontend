@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
+import { useUserStore } from "../../entity/user/model/store";
 
 export default function LoginPage()
 {
@@ -10,6 +11,8 @@ export default function LoginPage()
     const [rememberMeCheck, setRememberMeCheck] = useState(false);
 
     const [errorMessage, setErrorMessage] = useState<string>("");
+
+    const setUser = useUserStore((s) => s.setUser);
 
     const onLogin = () => {
         if(!emailField && !passwordField) return;
@@ -22,7 +25,12 @@ export default function LoginPage()
         });
 
         fetch(`http://localhost:3000/api/auth/sign-in/email`, {headers: {"Content-Type": "application/json"}, method: "POST", body: dataToString})
-        .then(() => {
+        .then((data) => {
+            fetch(`http://localhost:3000/api/users/me`, {credentials: 'include'}).then((data) => {
+                data.json().then((json) => {
+                    setUser(json)
+                })
+            })
             navigate("/");
         }).catch((error) => {
             sendErrorMessage(error.message || "Something went wrong");
