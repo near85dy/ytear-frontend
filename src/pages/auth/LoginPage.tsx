@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
-import { useUserStore } from "../../entity/user/model/store";
+import { authLogin } from "../../features/auth/api/api";
 
 export default function LoginPage()
 {
@@ -12,29 +12,18 @@ export default function LoginPage()
 
     const [errorMessage, setErrorMessage] = useState<string>("");
 
-    const setUser = useUserStore((s) => s.setUser);
-
     const onLogin = () => {
         if(!emailField && !passwordField) return;
 
-        const dataToString: string = JSON.stringify({
-            email: emailField,
-            password: passwordField,
-            callbackURL: "",
-            rememberMe: rememberMeCheck,
-        });
 
-        fetch(`http://localhost:3000/api/auth/sign-in/email`, {headers: {"Content-Type": "application/json"}, method: "POST", body: dataToString})
-        .then((data) => {
-            fetch(`http://localhost:3000/api/users/me`, {credentials: 'include'}).then((data) => {
-                data.json().then((json) => {
-                    setUser(json)
-                })
-            })
+        authLogin({email: emailField, password: passwordField, rememberMe: rememberMeCheck}).then((data) => {
+            if(data.message)   
+            {
+                sendErrorMessage(data.message);
+                return;
+            }
             navigate("/");
-        }).catch((error) => {
-            sendErrorMessage(error.message || "Something went wrong");
-        }); 
+        })
     }
 
     const sendErrorMessage = (message: string) =>

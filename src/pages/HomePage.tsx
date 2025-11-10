@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react"
-import type { Post } from "../entity/post/model/model";
-import type { UserProfile } from "../entity/user/model/types";
-import { getLocalUser } from "../entity/user/api/api";
+import type { Post } from "../entity/post/model/types";
+import PostCard from "../entity/post/ui/PostCard";
+
+const API_URL = "http://77.93.9.99:3000/api"
 
 export default function HomePage()
 {
     const [postTape, setPostTape] = useState<Post[]>([]);
  
     useEffect(() => {
-        console.log(getLocalUser())
-        
-        fetch(`http://localhost:3000/api/posts/foryou`, {credentials: 'include'}).then((data) => {
+        fetch(`${API_URL}/posts/foryou`, {credentials: 'include'}).then((data) => {
             data.json().then((json) => {
                 setPostTape(json)
             });
@@ -29,23 +28,7 @@ export default function HomePage()
         </div>
         <div className="flex flex-col gap-4 p-3">
             {postTape.map((item) => (
-                <div className="flex gap-6" key={item.id}>
-                    <img width={50} height={50} src={'http://localhost:3000/api/storage/avatar/' + item.user.image}></img>
-                    <div className="flex flex-col">
-                        <div className="flex gap-3 items-center">
-                            <div>{item.user.name} {item.user.surname}</div>
-                            <div className="flex items-center justify-between">
-                                <div className="text-xs">@{item.user.username}</div>
-                                <div>{item.createdAt.split("T")[1].split("Z")[0].split(".")[0]}</div>
-                            </div>
-                        </div>
-                        <div>{item.content}</div>
-                        <div className="flex flex-row gap-2">
-                            <div>Views: {item.views_count}</div>
-                            <div>Likes: {item.likes_count}</div>
-                        </div>
-                    </div>
-                </div>
+                <PostCard id={item.id} content={item.content} likes_count={item.likes_count} views_count={item.views_count} createdAt={item.createdAt} user={item.user}></PostCard>
             ))}
         </div>
     </div>)

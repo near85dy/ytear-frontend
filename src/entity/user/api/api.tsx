@@ -1,5 +1,5 @@
+import { API_URL } from "../../../app/env"
 
-const API_URL = "http://localhost:3000/api"
 
 export async function getUserById(id: string) {
     try {
@@ -18,7 +18,6 @@ export async function getLocalUser() {
         const res = await fetch(`${API_URL}/users/me`, { credentials: 'include' })
         if (!res.ok) throw new Error('Failed to fetch local user')
         const json = await res.json()
-        console.log("2", json)
         return json
     } catch (err) {
         console.error(err)

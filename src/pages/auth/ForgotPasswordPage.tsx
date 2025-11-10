@@ -1,15 +1,14 @@
-import { useState } from "react"
+// import { useState } from "react"
 
-enum RecoveryPasswordState {
-    Email,
-    CodeVerification,
-    NewPassword,
-}
+// enum RecoveryPasswordState {
+//     Email,
+//     CodeVerification,
+//     NewPassword,
+// }
 
 export default function ForgotPasswordPage()
 {
-    const [recoveryState, setRecoveryState] = useState<RecoveryPasswordState>(RecoveryPasswordState.Email);
-
+    // const [recoveryState, setRecoveryState] = useState<RecoveryPasswordState>(RecoveryPasswordState.Email);
 
     return (
         <div className="flex flex-col justify-center items-center h-screen">

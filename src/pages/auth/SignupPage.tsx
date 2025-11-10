@@ -23,10 +23,14 @@ export default function SignupPage() {
             surname: surnameField,
             birthday: birthdayField,
             password: passwordField,
+            callbackURL: "",
+            image: "",
             rememberMe: true,
         };
     
-        const response = fetch(`http://77.93.9.99:3000/api/sign-up/email`, {method: "POST", body: JSON.stringify(prepareData), credentials: 'include'});
+        console.log(prepareData);
+        
+        fetch(`http://77.93.9.99:3000/api/auth/sign-up/email`, {headers: {"Content-Type": "application/json"}, method: "POST", body: JSON.stringify(prepareData), credentials: 'include'});
     }
 
     return (<div className="flex bg-red-100 justify-center items-center h-screen">
