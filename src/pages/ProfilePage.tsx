@@ -4,13 +4,19 @@ import type { Post } from "../entity/post/model/types";
 import { getLocalUserPosts } from "../entity/post/api/api";
 import PostCard from "../entity/post/ui/PostCard";
 import { getLocalUser } from "../entity/user/api/api";
+import { BaseModal } from "../shared/BaseModal";
+import EditProfileForm from "../features/users/ui/EditProfileForm";
+import { useNavigate } from "react-router-dom";
 
 
 export default function ProfilePage() {
+    const navigate = useNavigate();
+    
     const[userProfile, setUserProfile] = useState<UserProfile>();
     const[userPosts, setUserPosts] = useState<Post[]>();
-
     const [currentButton, setCurrentButton] = useState<number>(0);
+
+    const [editProfileModal, setEditProfileModal] = useState<boolean>(false);
 
     const bottomButtons = [
         {id: 0, name: "Tweets"},
@@ -24,16 +30,17 @@ export default function ProfilePage() {
         })
         
         getLocalUserPosts().then((data) => {
-            setUserPosts(data)
+            console.log(data)
+            setUserPosts([...data].reverse())
         });
     }, [])
 
-    return (<div className="flex flex-col w-[400px] h-[200px]">
-        <div>
-
+    return (<div className="flex flex-col w-screen">
+        <div className="flex">
+            <button onClick={() => navigate("/")}>{"Back"}</button>
         </div>
-        <div>
-            <button>Edit profile</button>
+        <div className="flex justify-end items-end bg-red-100 min-h-[22vh]">
+            <button className="m-3 p-1" onClick={() => {setEditProfileModal(true)}}>Edit profile</button>
         </div>
         <div>
             <div>You</div>
@@ -51,9 +58,14 @@ export default function ProfilePage() {
             </div> :              
             <div className="flex flex-col">
                 {userPosts?.map((item) => (
-                    <PostCard id={item.id} content={item.content} likes_count={item.likes_count} views_count={item.views_count} createdAt={item.createdAt} user={item.user}></PostCard>
+                    <div className="flex py-2" key={item.id}>
+                        <PostCard id={item.id} content={item.content} likes_count={item.likes_count} views_count={item.views_count} createdAt={item.createdAt} user={item.user}></PostCard>
+                    </div>
                 ))}
             </div>}
         </div>
+        <BaseModal isOpen={editProfileModal} onClose={() => {setEditProfileModal(false)}}>
+                <EditProfileForm onSave={() => {setEditProfileModal(false)}}></EditProfileForm>
+        </BaseModal>
     </div>)
 }

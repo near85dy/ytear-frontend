@@ -15,12 +15,12 @@ interface PostProps {
 }
 
 export default function PostCard(props: PostProps) {
-    return (<div className="flex gap-6" key={props.id}>
+    return (<div className="flex gap-6 w-full jusfify-center items-center" key={props.id}>
         <img width={50} height={50} src={`${"http://77.93.9.99:3000"}/api/storage/avatar/` + props.user.image}></img>
-        <div className="flex flex-col">
-            <div className="flex gap-3 propss-center">
+        <div className="flex flex-col flex-1">
+            <div className="flex gap-3 items-center">
                 <div>{props.user.name} {props.user.surname}</div>
-                <div className="flex propss-center justify-between">
+                <div className="flex items-center justify-between flex-1">
                     <div className="text-xs">@{props.user.username}</div>
                     <div>{props.createdAt.split("T")[1].split("Z")[0].split(".")[0]}</div>
                 </div>

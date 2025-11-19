@@ -1,9 +1,7 @@
 
-export interface UserProfile {
-    id: string,
+export interface UserProfileForm {
     image: string,
     name: string,
     surname: string,
-    username: string,
     birthday: string,
 }

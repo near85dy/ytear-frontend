@@ -1,16 +1,17 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom";
 import { authLogin } from "../../features/auth/api/api";
+import { useNotify } from "../../shared/NotificationProvider";
 
 export default function LoginPage()
 {
     const navigate = useNavigate();
+    const notify = useNotify();
 
     const [emailField, setEmailField] = useState("");
     const [passwordField, setPasswordField] = useState("");
     const [rememberMeCheck, setRememberMeCheck] = useState(false);
 
-    const [errorMessage, setErrorMessage] = useState<string>("");
 
     const onLogin = () => {
         if(!emailField && !passwordField) return;
@@ -19,21 +20,12 @@ export default function LoginPage()
         authLogin({email: emailField, password: passwordField, rememberMe: rememberMeCheck}).then((data) => {
             if(data.message)   
             {
-                sendErrorMessage(data.message);
+                notify(data.message)
                 return;
             }
             navigate("/");
         })
     }
-
-    const sendErrorMessage = (message: string) =>
-    {
-        setErrorMessage(message);
-        setTimeout(() => {
-            setErrorMessage("");
-        }, 5000)
-    }
-
     return (<div className="flex justify-center items-center h-screen w-screen" >
         <div className="flex flex-col bg-blue-700 p-12 gap-2 border-2 rounded-md">
             <div>
@@ -64,11 +56,5 @@ export default function LoginPage()
                 </a>
             </div> 
         </div>
-        {errorMessage ? 
-        <div className="absolute left-0 bottom-0 bg-red-700 px-10 rounded-md">
-            <div>
-                <p className="text-white text-lg">{errorMessage}</p>
-            </div>
-        </div> : <></>}
     </div>)
 }

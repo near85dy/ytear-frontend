@@ -1,6 +1,12 @@
 import { useState } from "react"
+import { authSignup } from "../../features/auth/api/api";
+import { useNotify } from "../../shared/NotificationProvider";
+import { useNavigate } from "react-router-dom";
 
 export default function SignupPage() {
+    const navigate = useNavigate();
+    const notify = useNotify();
+
     const [usernameField, setUsernameField] = useState("");
     const [emailField, setEmailField] = useState("");
 
@@ -16,6 +22,7 @@ export default function SignupPage() {
 
         if(passwordField != confirmField) return;
 
+
         const prepareData = {
             username: usernameField,
             email: emailField,
@@ -23,17 +30,19 @@ export default function SignupPage() {
             surname: surnameField,
             birthday: birthdayField,
             password: passwordField,
-            callbackURL: "",
-            image: "",
             rememberMe: true,
         };
     
         console.log(prepareData);
         
-        fetch(`http://77.93.9.99:3000/api/auth/sign-up/email`, {headers: {"Content-Type": "application/json"}, method: "POST", body: JSON.stringify(prepareData), credentials: 'include'});
+        authSignup(prepareData).then((response) => {
+            console.log(response)
+            notify(response.message)
+            if(response.ok) navigate("/");
+        })
     }
 
-    return (<div className="flex bg-red-100 justify-center items-center h-screen">
+    return (<div className="flex bg-red-100 justify-center items-center h-screen w-screen">
         <div className="flex flex-col gap-1 bg-gray-200 p-12">
             <label>Username</label>
             <input value={usernameField} onChange={(e) => {setUsernameField(e.target.value)}}></input>

@@ -17,7 +17,8 @@ export default function HomePage()
     }, [])
     
 
-    return(<div className="flex flex-col">
+    return(
+    <div className="flex flex-col w-full">
         <div className="font-bold text-xl p-2">
             Home
         </div>
@@ -28,7 +29,7 @@ export default function HomePage()
         </div>
         <div className="flex flex-col gap-4 p-3">
             {postTape.map((item) => (
-                <PostCard id={item.id} content={item.content} likes_count={item.likes_count} views_count={item.views_count} createdAt={item.createdAt} user={item.user}></PostCard>
+                <PostCard key={item.id} id={item.id} content={item.content} likes_count={item.likes_count} views_count={item.views_count} createdAt={item.createdAt} user={item.user}></PostCard>
             ))}
         </div>
     </div>)
