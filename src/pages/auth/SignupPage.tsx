@@ -32,11 +32,8 @@ export default function SignupPage() {
             password: passwordField,
             rememberMe: true,
         };
-    
-        console.log(prepareData);
-        
+            
         authSignup(prepareData).then((response) => {
-            console.log(response)
             notify(response.message)
             if(response.ok) navigate("/");
         })

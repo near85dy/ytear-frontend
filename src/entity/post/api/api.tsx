@@ -6,15 +6,9 @@ export async function getRecomendationPosts()
 
 }
 
-export async function getUserPostsById(id: string)
-{
-    try{
-
-    }
-    catch (error) {
-        console.log(id)
-    }
-}
+// export async function getUserPostsById(id: string)
+// {
+// }
 
 export async function getLocalUserPosts()
 {

@@ -1,21 +1,25 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
 import { authLogin } from "../../features/auth/api/api";
 import { useNotify } from "../../shared/NotificationProvider";
+import { useUser } from "../../entity/user/model/selectors";
 
 export default function LoginPage()
 {
     const navigate = useNavigate();
     const notify = useNotify();
+    const user = useUser();
 
     const [emailField, setEmailField] = useState("");
     const [passwordField, setPasswordField] = useState("");
     const [rememberMeCheck, setRememberMeCheck] = useState(false);
 
+    useEffect(() => {
+        if(user) navigate("/");
+    }, [])
 
     const onLogin = () => {
-        if(!emailField && !passwordField) return;
-
+        if(!emailField || !passwordField) return notify("Email or password field empty is failed");
 
         authLogin({email: emailField, password: passwordField, rememberMe: rememberMeCheck}).then((data) => {
             if(data.message)   
@@ -28,9 +32,6 @@ export default function LoginPage()
     }
     return (<div className="flex justify-center items-center h-screen w-screen" >
         <div className="flex flex-col bg-blue-700 p-12 gap-2 border-2 rounded-md">
-            <div>
-                <a href="/" className="px-6 py-2 text-xl hover:bg-blue-200 bg-blue-400 text-white rounded-md no-underline">Back</a>
-            </div>
             <div>
                 <p className="text-white text-4xl">Log in into your account</p>
             </div>

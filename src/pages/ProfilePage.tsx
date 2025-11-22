@@ -7,13 +7,18 @@ import { getLocalUser } from "../entity/user/api/api";
 import { BaseModal } from "../shared/BaseModal";
 import EditProfileForm from "../features/users/ui/EditProfileForm";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../entity/user/model/selectors";
+import { useUserStore } from "../entity/user/model/store";
 
 
 export default function ProfilePage() {
     const navigate = useNavigate();
-    
-    const[userProfile, setUserProfile] = useState<UserProfile>();
-    const[userPosts, setUserPosts] = useState<Post[]>();
+
+    const user = useUser();
+    const setUser = useUserStore((s) => s.setUser)
+
+    const [userProfile, setUserProfile] = useState<UserProfile>();
+    const [userPosts, setUserPosts] = useState<Post[]>();
     const [currentButton, setCurrentButton] = useState<number>(0);
 
     const [editProfileModal, setEditProfileModal] = useState<boolean>(false);
@@ -25,15 +30,14 @@ export default function ProfilePage() {
     ]
 
     useEffect(() => {
-        getLocalUser().then((response) => {
-            setUserProfile(response)
-        })
-        
+        setUserProfile(user) 
+
         getLocalUserPosts().then((data) => {
-            console.log(data)
             setUserPosts([...data].reverse())
+            console.log()
         });
-    }, [])
+        console.log("Profile page draw")
+    }, [user])
 
     return (<div className="flex flex-col w-screen">
         <div className="flex">
@@ -58,7 +62,7 @@ export default function ProfilePage() {
             </div> :              
             <div className="flex flex-col">
                 {userPosts?.map((item) => (
-                    <div className="flex py-2" key={item.id}>
+                    <div className="flex p-3" key={item.id}>
                         <PostCard id={item.id} content={item.content} likes_count={item.likes_count} views_count={item.views_count} createdAt={item.createdAt} user={item.user}></PostCard>
                     </div>
                 ))}

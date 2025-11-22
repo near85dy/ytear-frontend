@@ -16,7 +16,7 @@ export function NotificationProvider({children}: {children: ReactNode})
         <NotificationContext.Provider value={notify}>
             {children}
             {message ? 
-            <div className="fixed w-3/4 top-2 md:left-2 md:bottom-2 bg-red-700 px-10 rounded-md z-50">
+            <div className="fixed top-2 left-auto md:top-auto md:bottom-2 md:left-2 bg-red-700 px-10 rounded-md z-50">
                 <div>
                     <p className="text-white text-lg">{message}</p>
                 </div>

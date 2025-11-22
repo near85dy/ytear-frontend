@@ -9,11 +9,10 @@ export default function PostForm()
 {
     const user = useUser();
     const notify = useNotify();
-
+ 
     const [content, setContent] = useState<string>("");
 
     useState(() => {
-        console.log(user.image)
     })
 
     const onPost = () => {

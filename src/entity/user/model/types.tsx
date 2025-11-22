@@ -6,4 +6,5 @@ export interface UserProfile {
     surname: string,
     username: string,
     birthday: string,
+    avatar: File
 }

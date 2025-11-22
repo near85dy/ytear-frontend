@@ -1,3 +1,4 @@
+import UserImage from "../../user/ui/UserImage"
 
 interface PostProps {
     id: string,
@@ -15,8 +16,10 @@ interface PostProps {
 }
 
 export default function PostCard(props: PostProps) {
-    return (<div className="flex gap-6 w-full jusfify-center items-center" key={props.id}>
-        <img width={50} height={50} src={`${"http://77.93.9.99:3000"}/api/storage/avatar/` + props.user.image}></img>
+    return (<div className="flex gap-6 w-full" key={props.id}>
+        <div className="flex items-center justify-center">
+            <UserImage url={props.user.image}></UserImage>
+        </div>
         <div className="flex flex-col flex-1">
             <div className="flex gap-3 items-center">
                 <div>{props.user.name} {props.user.surname}</div>

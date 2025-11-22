@@ -5,6 +5,7 @@ import HomePage from "./pages/HomePage";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import Layout from "./app/layout";
 import ProfilePage from "./pages/ProfilePage";
+import MessagesPage from "./pages/MessagesPage";
 
 export const router = createBrowserRouter([
     {
@@ -12,7 +13,8 @@ export const router = createBrowserRouter([
         element: <Layout/>,
         children: [
             {path: "/", Component: HomePage},
-            {path: "/profile", Component: ProfilePage}
+            {path: "/profile", Component: ProfilePage},
+            {path: "/messages", Component: MessagesPage}
         ]
     },
     {path: "/forgot-password", Component: ForgotPasswordPage},
