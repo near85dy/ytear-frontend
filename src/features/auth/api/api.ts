@@ -11,6 +11,5 @@ export async function authLogin(form: LoginForm)
 export async function authSignup(form: SignupForm)
 {
     const response = await fetch(`${API_URL}/auth/sign-up/email`, {headers: {"Content-Type": "application/json"}, method: "POST", body: JSON.stringify(form), credentials: 'include'});
-    const json = await response.json();
-    return json;
+    return response;
 }

@@ -3,12 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { authLogin } from "../../features/auth/api/api";
 import { useNotify } from "../../shared/NotificationProvider";
 import { useUser } from "../../entity/user/model/selectors";
+import { useUserStore } from "../../entity/user/model/store";
 
 export default function LoginPage()
 {
     const navigate = useNavigate();
     const notify = useNotify();
+
     const user = useUser();
+    const setUser = useUserStore((s) => s.setUser)
 
     const [emailField, setEmailField] = useState("");
     const [passwordField, setPasswordField] = useState("");
