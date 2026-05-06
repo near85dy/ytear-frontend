@@ -15,6 +15,6 @@ export default defineConfig({
         target: 'https://back.gavrusa.com',
         changeOrigin: true,
       },
-    },
+    }, 
   },
 })
