@@ -38,6 +38,7 @@ export function CommunitiesPage() {
   const [createName, setCreateName] = useState('')
   const [createSlug, setCreateSlug] = useState('')
   const [createDesc, setCreateDesc] = useState('')
+  const [createType, setCreateType] = useState<'PUBLIC' | 'PRIVATE'>('PUBLIC')
   const [isCreating, setIsCreating] = useState(false)
   const [createError, setCreateError] = useState<string | null>(null)
 
@@ -80,6 +81,7 @@ export function CommunitiesPage() {
           name: createName,
           slug: createSlug,
           description: createDesc || undefined,
+            type: createType,
         },
       })
       setCreateName('')
@@ -138,6 +140,18 @@ export function CommunitiesPage() {
             />
           </label>
         </div>
+        <div className="mt-3">
+          <div className="mb-1 text-sm">{t.communities.visibility}</div>
+          <select
+            value={createType}
+            onChange={(e) => setCreateType(e.target.value as 'PUBLIC' | 'PRIVATE')}
+            className="w-40 rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm dark:border-zinc-800 dark:bg-zinc-950"
+            disabled={!auth.user || isCreating}
+          >
+            <option value="PUBLIC">{t.communities.typePublic ?? 'Public'}</option>
+            <option value="PRIVATE">{t.communities.typePrivate ?? 'Private'}</option>
+          </select>
+        </div>
         <label className="mt-3 block">
           <div className="mb-1 text-sm">{t.communities.description}</div>
           <input
@@ -183,14 +197,14 @@ export function CommunitiesPage() {
                   <div className="text-sm font-semibold">c/{c.slug}</div>
                   <div className="text-xs text-zinc-600 dark:text-zinc-400">{c.name}</div>
                 </div>
-                <div className="text-xs text-zinc-600 dark:text-zinc-400">{c.type ?? ''}</div>
+                <div className="text-xs text-zinc-600 dark:text-zinc-400">{c.type === 'PRIVATE' ? t.communities.typePrivate : t.communities.typePublic}</div>
               </div>
               {c.description ? (
                 <p className="mt-2 text-sm text-zinc-700 dark:text-zinc-300">{c.description}</p>
               ) : null}
               <div className="mt-3 text-xs text-zinc-600 dark:text-zinc-400">
-                {(c.memberCount ?? 0) ? `${c.memberCount} members` : ''}{' '}
-                {(c.postCount ?? 0) ? `· ${c.postCount} posts` : ''}
+                {(c.memberCount ?? 0) ? t.communities.memberCount(c.memberCount ?? 0) : ''}{' '}
+                {(c.postCount ?? 0) ? `· ${t.communities.postCount(c.postCount ?? 0)}` : ''}
               </div>
             </Link>
           ))

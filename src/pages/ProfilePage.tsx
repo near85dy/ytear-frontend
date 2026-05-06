@@ -4,6 +4,8 @@ import { useAuth } from '../auth/AuthProvider'
 import { apiRequest } from '../lib/http'
 import { toUploadUrl } from '../lib/uploads'
 import { normalizePage } from '../lib/pagination'
+import type { MediaItem } from '../lib/media'
+import { MediaGrid } from '../components/MediaGrid'
 import { t } from '../i18n/t'
 import { RichContent } from '../components/RichContent'
 
@@ -22,6 +24,7 @@ type Post = {
   createdAt: string
   author: { id: string; username: string }
   community?: { slug: string; name: string } | null
+  media?: MediaItem[]
 }
 
 type PageResult<T> = {
@@ -130,12 +133,13 @@ export function ProfilePage() {
               ) : null}
             </div>
             <RichContent content={p.content} />
+            <MediaGrid media={p.media} />
             <div className="mt-3 flex items-center justify-end">
               <Link
                 to={`/posts/${p.id}`}
                 className="rounded-md px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-950"
               >
-                Открыть
+                {t.common.open}
               </Link>
             </div>
           </article>

@@ -3,6 +3,7 @@ import { Globe2, Users, Rss, Settings as SettingsIcon, LogIn, UserPlus, LogOut, 
 import { useAuth } from '../auth/AuthProvider'
 import { t } from '../i18n/t'
 import { useTheme } from '../theme/ThemeProvider'
+import { setLanguage, getLanguage } from '../i18n/t'
 
 function Item({
   to,
@@ -57,15 +58,26 @@ export function TopNav() {
           </nav>
 
           <div className="flex-1" />
+          <div className="hidden sm:flex items-center gap-2">
+            <select
+              value={getLanguage()}
+              onChange={(e) => setLanguage(e.target.value as 'lv' | 'en')}
+              className="rounded-md border border-zinc-200 bg-white px-2 py-1 text-sm dark:border-zinc-800 dark:bg-zinc-950"
+              aria-label="Language"
+            >
+              <option value="lv">LV</option>
+              <option value="en">EN</option>
+            </select>
+          </div>
 
           <button
             onClick={toggleTheme}
             className="rounded-md p-2 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900 sm:px-3 sm:py-2"
-            title={theme === 'dark' ? 'Gaišais režīms' : 'Tumšais režīms'}
+            title={theme === 'dark' ? t.common.light : t.common.dark}
           >
             <span className="inline-flex items-center gap-2">
               {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-              <span className="hidden sm:inline">{theme === 'dark' ? 'Light' : 'Dark'}</span>
+              <span className="hidden sm:inline">{theme === 'dark' ? t.common.light : t.common.dark}</span>
             </span>
           </button>
 
@@ -140,4 +152,3 @@ export function TopNav() {
     </>
   )
 }
-
