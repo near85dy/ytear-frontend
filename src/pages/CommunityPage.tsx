@@ -128,6 +128,19 @@ export function CommunityPage() {
     observer.observe(node)
     return () => observer.disconnect()
   }, [fetchPostsPage, hasMore, isLoading, isLoadingMore, page, slug])
+    useEffect(() => {
+      if (inviteSuccess) {
+        const timeout = setTimeout(() => setInviteSuccess(null), 3000)
+        return () => clearTimeout(timeout)
+      }
+    }, [inviteSuccess])
+
+    useEffect(() => {
+      if (inviteError) {
+        const timeout = setTimeout(() => setInviteError(null), 3000)
+        return () => clearTimeout(timeout)
+      }
+    }, [inviteError])
 
   async function joinOrLeave(mode: 'join' | 'leave') {
     if (!slug) return
@@ -242,41 +255,45 @@ export function CommunityPage() {
                   {isJoining ? '…' : t.communities.leave}
                 </button>
 
-                <div className="flex items-center gap-2">
-                  <input
-                    value={inviteUsername}
-                    onChange={(e) => setInviteUsername(e.target.value)}
-                    placeholder={t.communities.invitePlaceholder}
-                    className="rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm dark:border-zinc-800 dark:bg-zinc-950"
-                  />
-                  <button
-                    disabled={inviteLoading || !inviteUsername}
-                    onClick={async () => {
-                      if (!slug) return
-                      setInviteLoading(true)
-                      setInviteError(null)
-                      setInviteSuccess(null)
-                      try {
-                        await apiRequest(`/api/communities/${slug}/invite`, {
-                          method: 'POST',
-                          token,
-                          body: { username: inviteUsername },
-                        })
-                        setInviteSuccess(t.communities.inviteSent)
-                        setInviteUsername('')
-                      } catch (e) {
-                        if (e instanceof ApiError) setInviteError(e.message)
-                        else setInviteError(t.common.errorGeneric)
-                      } finally {
-                        setInviteLoading(false)
-                      }
-                    }}
-                    className="rounded-md bg-zinc-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900"
-                  >
-                    {inviteLoading ? '…' : t.communities.invite}
-                  </button>
-                </div>
+                {community.type === 'PRIVATE' && (community.isOwner || community.membership?.role === 'ADMIN') && (
+                  <div className="flex items-center gap-2">
+                    <input
+                      value={inviteUsername}
+                      onChange={(e) => setInviteUsername(e.target.value)}
+                      placeholder={t.communities.invitePlaceholder}
+                      className="rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm dark:border-zinc-800 dark:bg-zinc-950"
+                    />
+                    <button
+                      disabled={inviteLoading || !inviteUsername}
+                      onClick={async () => {
+                        if (!slug) return
+                        setInviteLoading(true)
+                        setInviteError(null)
+                        setInviteSuccess(null)
+                        try {
+                          await apiRequest(`/api/communities/${slug}/invite`, {
+                            method: 'POST',
+                            token,
+                            body: { username: inviteUsername },
+                          })
+                          setInviteSuccess(t.communities.inviteSent)
+                          setInviteUsername('')
+                        } catch (e) {
+                          if (e instanceof ApiError) setInviteError(e.message)
+                          else setInviteError(t.common.errorGeneric)
+                        } finally {
+                          setInviteLoading(false)
+                        }
+                      }}
+                      className="rounded-md bg-zinc-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-50 dark:bg-zinc-100 dark:text-zinc-900"
+                    >
+                      {inviteLoading ? '…' : t.communities.invite}
+                    </button>
+                  </div>
+                )}
               </div>
+            ) : community.type === 'PRIVATE' ? (
+              <div className="text-sm text-zinc-600 dark:text-zinc-400">{t.communities.typePrivate}</div>
             ) : (
               <button
                 disabled={isJoining}
@@ -291,6 +308,16 @@ export function CommunityPage() {
         {joinError ? (
           <div className="mt-3 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-200">
             {joinError}
+          </div>
+        ) : null}
+        {inviteError ? (
+          <div className="mt-3 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-200">
+            {inviteError}
+          </div>
+        ) : null}
+        {inviteSuccess ? (
+          <div className="mt-3 rounded-md border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700 dark:border-green-900/50 dark:bg-green-950/40 dark:text-green-200">
+            {inviteSuccess}
           </div>
         ) : null}
       </div>

@@ -6,6 +6,9 @@ import { ApiError, apiRequest } from '../lib/http'
 import { normalizePage } from '../lib/pagination'
 import { t } from '../i18n/t'
 
+const COMMUNITY_TYPE_PUBLIC = 'PUBLIC' as const
+const COMMUNITY_TYPE_PRIVATE = 'PRIVATE' as const
+
 type Community = {
   id: string
   name: string
@@ -31,6 +34,7 @@ export function CommunitiesPage() {
 
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
+  const [communityType, setCommunityType] = useState<typeof COMMUNITY_TYPE_PUBLIC | typeof COMMUNITY_TYPE_PRIVATE>(COMMUNITY_TYPE_PUBLIC)
   const [data, setData] = useState<PageResult<Community> | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -48,11 +52,15 @@ export function CommunitiesPage() {
       setIsLoading(true)
       setError(null)
       try {
+        console.log('Fetching communities with type:', communityType, 'page:', page)
         const raw = await apiRequest<any>('/api/communities', {
-          query: { page, limit: 20, search: search || undefined },
+          query: { page, limit: 20, search: search || undefined, type: communityType },
+          token,
         })
+        console.log('Raw response:', raw)
         if (!cancelled) setData(normalizePage<Community>(raw))
-      } catch {
+      } catch (err) {
+        console.log('Error fetching communities:', err)
         if (!cancelled) setError(t.communities.failedLoad)
       } finally {
         if (!cancelled) setIsLoading(false)
@@ -61,7 +69,7 @@ export function CommunitiesPage() {
     return () => {
       cancelled = true
     }
-  }, [page, search])
+  }, [page, search, communityType, token])
 
   const items = useMemo(() => data?.items ?? [], [data])
 
@@ -98,11 +106,46 @@ export function CommunitiesPage() {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
-        <div>
-          <h1 className="text-xl font-semibold sm:text-2xl">{t.communities.title}</h1>
-          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{t.communities.subtitle}</p>
+      <div>
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
+          <div>
+            <h1 className="text-xl font-semibold sm:text-2xl">{t.communities.title}</h1>
+            <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{t.communities.subtitle}</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => {
+                console.log('PUBLIC button clicked')
+                setPage(1)
+                setCommunityType('PUBLIC')
+              }}
+              className={`rounded-md px-3 py-2 text-sm font-medium transition ${
+                communityType === 'PUBLIC'
+                  ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900'
+                  : 'border border-zinc-200 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-900'
+              }`}
+            >
+              {t.communities.typePublic}
+            </button>
+            {auth.user && (
+              <button
+                onClick={() => {
+                  console.log('PRIVATE button clicked')
+                  setPage(1)
+                  setCommunityType('PRIVATE')
+                }}
+                className={`rounded-md px-3 py-2 text-sm font-medium transition ${
+                  communityType === 'PRIVATE'
+                    ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900'
+                    : 'border border-zinc-200 text-zinc-700 hover:bg-zinc-100 dark:border-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-900'
+                }`}
+              >
+                {t.communities.typePrivate}
+              </button>
+            )}
+          </div>
         </div>
+
         <input
           value={search}
           onChange={(e) => {
