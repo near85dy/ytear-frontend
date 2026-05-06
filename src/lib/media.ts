@@ -1,3 +1,6 @@
+import { ApiError } from './http'
+import { localizeServerError } from './serverErrors'
+
 export type MediaItem = {
   id: string
   url: string
@@ -23,11 +26,7 @@ export async function uploadMediaFiles(token: string | null, files: File[]) {
 
   const payload = await res.json().catch(() => null)
   if (!res.ok) {
-    const msg =
-      payload && typeof payload === 'object' && 'message' in payload
-        ? String((payload as any).message)
-        : `HTTP ${res.status}`
-    throw new Error(msg)
+    throw new ApiError(localizeServerError(payload, res.status), res.status, payload)
   }
 
   return payload as MediaItem[]

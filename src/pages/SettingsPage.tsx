@@ -3,6 +3,7 @@ import type { FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../auth/AuthProvider'
 import { ApiError, apiRequest } from '../lib/http'
+import { localizeServerError } from '../lib/serverErrors'
 import { t } from '../i18n/t'
 
 export function SettingsPage() {
@@ -69,9 +70,7 @@ export function SettingsPage() {
       })
       if (!res.ok) {
         const payload = await res.json().catch(() => null)
-        const msg =
-          payload && typeof payload === 'object' && 'message' in payload ? String((payload as any).message) : 'HTTP error'
-        throw new ApiError(msg, res.status, payload)
+        throw new ApiError(localizeServerError(payload, res.status), res.status, payload)
       }
       await auth.refreshMe()
       setAvatarFile(null)

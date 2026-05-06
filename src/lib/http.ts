@@ -1,3 +1,5 @@
+import { localizeServerError } from './serverErrors'
+
 export class ApiError extends Error {
   status: number
   payload: unknown
@@ -61,11 +63,7 @@ export async function apiRequest<T>(path: string, opts: RequestOptions = {}) {
   const payload = isJson ? await res.json().catch(() => null) : await res.text().catch(() => null)
 
   if (!res.ok) {
-    const msg =
-      typeof payload === 'object' && payload && 'message' in (payload as any)
-        ? String((payload as any).message)
-        : `HTTP ${res.status}`
-    throw new ApiError(msg, res.status, payload)
+    throw new ApiError(localizeServerError(payload, res.status), res.status, payload)
   }
 
   return payload as T
