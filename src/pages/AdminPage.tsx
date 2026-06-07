@@ -46,13 +46,6 @@ type AdminComment = {
   repliesCount: number;
 };
 
-type PageResult<T> = {
-  users?: T[];
-  posts?: T[];
-  comments?: T[];
-  meta: { total: number; page: number; limit: number; totalPages: number };
-};
-
 type Section = "users" | "posts" | "comments";
 
 function formatDate(iso: string) {
@@ -79,28 +72,43 @@ export function AdminPage() {
     setLoading(true);
     setError(null);
     try {
-      const [statsRes, listRes] = await Promise.all([
-        apiRequest<Stats>("/api/admin/stats", { token }),
-        section === "users"
-          ? apiRequest<PageResult<AdminUser>>("/api/admin/users", {
-              token,
-              query: { page: 1, limit: 50, search: query || undefined },
-            })
-          : section === "posts"
-            ? apiRequest<PageResult<AdminPost>>("/api/admin/posts", {
-                token,
-                query: { page: 1, limit: 50, search: query || undefined },
-              })
-            : apiRequest<PageResult<AdminComment>>("/api/admin/comments", {
-                token,
-                query: { page: 1, limit: 50, search: query || undefined },
-              }),
-      ]);
-
+      const statsRes = await apiRequest<Stats>("/api/admin/stats", { token });
       setStats(statsRes);
-      setUsers(listRes.users ?? []);
-      setPosts(listRes.posts ?? []);
-      setComments(listRes.comments ?? []);
+
+      if (section === "users") {
+        const listRes = await apiRequest<{ users: AdminUser[] }>(
+          "/api/admin/users",
+          {
+            token,
+            query: { page: 1, limit: 50, search: query || undefined },
+          },
+        );
+        setUsers(listRes.users ?? []);
+        setPosts([]);
+        setComments([]);
+      } else if (section === "posts") {
+        const listRes = await apiRequest<{ posts: AdminPost[] }>(
+          "/api/admin/posts",
+          {
+            token,
+            query: { page: 1, limit: 50, search: query || undefined },
+          },
+        );
+        setPosts(listRes.posts ?? []);
+        setUsers([]);
+        setComments([]);
+      } else {
+        const listRes = await apiRequest<{ comments: AdminComment[] }>(
+          "/api/admin/comments",
+          {
+            token,
+            query: { page: 1, limit: 50, search: query || undefined },
+          },
+        );
+        setComments(listRes.comments ?? []);
+        setUsers([]);
+        setPosts([]);
+      }
     } catch (e) {
       setError(e instanceof ApiError ? e.message : t.common.errorGeneric);
     } finally {
