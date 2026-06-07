@@ -1,41 +1,52 @@
-import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { Globe2, Users, Rss, Settings as SettingsIcon, LogIn, UserPlus, LogOut, Sun, Moon } from 'lucide-react'
-import { useAuth } from '../auth/AuthProvider'
-import { t } from '../i18n/t'
-import { useTheme } from '../theme/ThemeProvider'
-import { setLanguage, getLanguage } from '../i18n/t'
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import {
+  Globe2,
+  Users,
+  Rss,
+  Settings as SettingsIcon,
+  LogIn,
+  UserPlus,
+  LogOut,
+  Sun,
+  Moon,
+  Shield,
+} from "lucide-react";
+import { useAuth } from "../auth/AuthProvider";
+import { t } from "../i18n/t";
+import { useTheme } from "../theme/ThemeProvider";
+import { setLanguage, getLanguage } from "../i18n/t";
 
 function Item({
   to,
   icon,
   children,
 }: {
-  to: string
-  icon?: React.ReactNode
-  children: React.ReactNode
+  to: string;
+  icon?: React.ReactNode;
+  children: React.ReactNode;
 }) {
   return (
     <NavLink
       to={to}
       className={({ isActive }: { isActive: boolean }) =>
         [
-          'inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition',
+          "inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition",
           isActive
-            ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900'
-            : 'text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900',
-        ].join(' ')
+            ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
+            : "text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900",
+        ].join(" ")
       }
     >
       {icon ? <span className="grid place-items-center">{icon}</span> : null}
       {children}
     </NavLink>
-  )
+  );
 }
 
 export function TopNav() {
-  const auth = useAuth()
-  const nav = useNavigate()
-  const { theme, toggleTheme } = useTheme()
+  const auth = useAuth();
+  const nav = useNavigate();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <>
@@ -55,13 +66,18 @@ export function TopNav() {
             <Item to="/feed" icon={<Rss className="h-4 w-4" />}>
               {t.nav.feed}
             </Item>
+            {auth.user?.isAdmin ? (
+              <Item to="/admin" icon={<Shield className="h-4 w-4" />}>
+                {t.nav.admin}
+              </Item>
+            ) : null}
           </nav>
 
           <div className="flex-1" />
           <div className="hidden sm:flex items-center gap-2">
             <select
               value={getLanguage()}
-              onChange={(e) => setLanguage(e.target.value as 'lv' | 'en')}
+              onChange={(e) => setLanguage(e.target.value as "lv" | "en")}
               className="rounded-md border border-zinc-200 bg-white px-2 py-1 text-sm dark:border-zinc-800 dark:bg-zinc-950"
               aria-label="Language"
             >
@@ -73,11 +89,17 @@ export function TopNav() {
           <button
             onClick={toggleTheme}
             className="rounded-md p-2 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900 sm:px-3 sm:py-2"
-            title={theme === 'dark' ? t.common.light : t.common.dark}
+            title={theme === "dark" ? t.common.light : t.common.dark}
           >
             <span className="inline-flex items-center gap-2">
-              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-              <span className="hidden sm:inline">{theme === 'dark' ? t.common.light : t.common.dark}</span>
+              {theme === "dark" ? (
+                <Sun className="h-4 w-4" />
+              ) : (
+                <Moon className="h-4 w-4" />
+              )}
+              <span className="hidden sm:inline">
+                {theme === "dark" ? t.common.light : t.common.dark}
+              </span>
             </span>
           </button>
 
@@ -100,8 +122,8 @@ export function TopNav() {
               </Link>
               <button
                 onClick={() => {
-                  auth.logout()
-                  nav('/global')
+                  auth.logout();
+                  nav("/global");
                 }}
                 className="rounded-md p-2 text-sm font-medium text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900 sm:bg-zinc-900 sm:px-3 sm:py-2 sm:text-white sm:hover:bg-zinc-800 sm:dark:bg-zinc-100 sm:dark:text-zinc-900 sm:dark:hover:bg-zinc-200"
               >
@@ -137,7 +159,9 @@ export function TopNav() {
       </header>
 
       <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-zinc-200 bg-white/95 px-2 py-1 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/95 sm:hidden">
-        <div className="mx-auto grid max-w-5xl grid-cols-3 gap-1">
+        <div
+          className={`mx-auto grid max-w-5xl gap-1 ${auth.user?.isAdmin ? "grid-cols-4" : "grid-cols-3"}`}
+        >
           <Item to="/global" icon={<Globe2 className="h-4 w-4" />}>
             <span className="text-xs">{t.nav.global}</span>
           </Item>
@@ -147,8 +171,13 @@ export function TopNav() {
           <Item to="/feed" icon={<Rss className="h-4 w-4" />}>
             <span className="text-xs">{t.nav.feed}</span>
           </Item>
+          {auth.user?.isAdmin ? (
+            <Item to="/admin" icon={<Shield className="h-4 w-4" />}>
+              <span className="text-xs">{t.nav.admin}</span>
+            </Item>
+          ) : null}
         </div>
       </nav>
     </>
-  )
+  );
 }
